@@ -21,7 +21,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
             images: ${{ secrets.DOCKERHUB_USERNAME }}/2025-fall-ai-course
-            tags: gpu
+            tags: cpu
 
       # Login Docker Hub
       - name: Docker Hub Log-in

@@ -4,8 +4,8 @@
 x-common-settings: &common
   build:
     context: ..
-    dockerfile: docker/dockerfile.gpu
-  image: pomelo925/2025-fall-ai-course:gpu
+    dockerfile: docker/dockerfile.cpu
+  image: pomelo925/2025-fall-ai-course:cpu
 
   volumes:
     # GUI support for applications
@@ -28,35 +28,16 @@ x-common-settings: &common
   stdin_open: true
   privileged: true
   stop_grace_period: 1s
-  working_dir: /workspace
-
-############################
-###   GPU settings       ###
-############################
-x-gpu-settings: &gpu
-  runtime: nvidia
-  deploy:
-    resources:
-      reservations:
-        devices:
-          - driver: nvidia
-            count: all
-            capabilities: [gpu]
-  
-  environment:
-    - NVIDIA_VISIBLE_DEVICES=all
-    - NVIDIA_DRIVER_CAPABILITIES=all
 
 ##############################
 ###   Container Services   ###
 ##############################
 services:
   dev:
-    <<: [*common, *gpu]
-    container_name: gpu-dev
-    command: ["/bin/bash"]
+    <<: *common
+    container_name: cpu-dev
+    working_dir: /workspace/openpilot
+    command: >
+      bash -c "tail -f /dev/null"
 
-  deploy:
-    <<: [*common, *gpu]
-    container_name: gpu-deploy
-    command: ["/bin/bash"]
+

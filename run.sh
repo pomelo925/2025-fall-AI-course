@@ -1,43 +1,10 @@
 #!/bin/bash
 
-# Usage function
-usage() {
-  echo "usage: $0 <service>"
-  echo "service:"
-  echo "  dev             Development service (interactive shell)"
-  echo "  deploy          Deploy service (application runtime)"
-  echo ""
-  echo "Examples:"
-  echo "  $0 dev          # Start development environment"
-  echo "  $0 deploy       # Start deployment service"
-  exit 1
-}
-
-# Check if exactly one argument is provided
-if [ $# -ne 1 ]; then
-    echo "Error: Service argument is required."
-    usage
-fi
-
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Parse arguments
-SERVICE=$1
-
-# Use GPU directly
-COMPOSE_FILE="$SCRIPT_DIR/docker/compose.gpu.yml"
+COMPOSE_FILE="$SCRIPT_DIR/docker/compose.cpu.yml"
 PROJECT_NAME="2025-fall-ai-course"
-
-# Validate service name
-case "$SERVICE" in
-    dev|deploy)
-        ;;
-    *)
-        echo "Error: Invalid service name '$SERVICE'. Must be 'dev' or 'deploy'."
-        usage
-        ;;
-esac
+SERVICE="dev"
 
 # Set up X11 forwarding
 echo "Setting up X11 forwarding..."
@@ -75,6 +42,14 @@ export XAUTHORITY
 echo "Cleaning up existing containers..."
 docker compose -p "$PROJECT_NAME" -f "$COMPOSE_FILE" down --volumes --remove-orphans 2>/dev/null || true
 
-# Start the specific service
-echo "Starting GPU $SERVICE service..."
+# Start the service
+echo "Starting openpilot development environment..."
 docker compose -p "$PROJECT_NAME" -f "$COMPOSE_FILE" up -d $SERVICE
+
+# Wait for container to be ready
+sleep 2
+
+# Enter the container and start Poetry shell with aliases
+CONTAINER_NAME="cpu-dev"
+echo "Entering container..."
+docker exec -it $CONTAINER_NAME bash -c "cd /workspace/openpilot && exec poetry run bash --rcfile <(echo 'alias ui=\"./selfdrive/ui/_ui\"')"

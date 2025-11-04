@@ -1,6 +1,6 @@
 <div align="center">
 
-# ProbRT
+# 2025-Fall-AI-Course
 
 <p align="center">
   <strong>Project-based Repository Template</strong>
@@ -18,7 +18,7 @@
 
 <div align="center" style="max-width: 80%; margin: 0 auto;">
 
-ProbRT is a project-based repository template that provides a complete development environment with Docker containerization, GitHub workflows, and standardized project structures. It offers both CPU and GPU support with multi-stage builds and CI/CD pipelines.
+2025-Fall-AI-Course provides a containerized development environment for openpilot projects. It features automated builds with Poetry dependency management, CPU-optimized Docker images, and X11 GUI support.
 
 </div>
 
@@ -32,11 +32,11 @@ ProbRT is a project-based repository template that provides a complete developme
 
 ### Prerequisites
 
-Before using ProbRT, ensure you have the following installed on your Linux system:
+Before using this project, ensure you have the following installed on your Linux system:
 
 - **Docker & Docker Compose**: Required for containerized development
-- **Git**: For version control and submodule management
-- **NVIDIA Docker Runtime**: Required for GPU support (optional)
+- **Git & Git LFS**: For version control and large file management
+- **X11 Server**: For GUI application support
 
 </br>
 
@@ -44,30 +44,31 @@ Before using ProbRT, ensure you have the following installed on your Linux syste
 
 1. Clone the repository with submodules:
    ```bash
-   git clone --recursive https://github.com/pomelo925/ProbRT.git
-   cd ProbRT
+   git clone --recursive https://github.com/pomelo925/2025-fall-AI-course.git
+   cd 2025-fall-AI-course
    ```
 
-2. Run the development environment:
+2. Initialize Git LFS and pull large files:
    ```bash
-   ./run.sh <device> <service>
+   git lfs install
+   git lfs pull
    ```
 
-   <details>
-   <summary><strong>Examples</strong></summary>
-   
+3. Run the development environment:
    ```bash
-   ./run.sh cpu dev       # Start CPU development environment
-   ./run.sh gpu deploy    # Start GPU deployment service
+   ./run.sh
    ```
-   </details>
 
-3. Configure GitHub Actions secrets for CI/CD workflows:
-   - Go to your repository **Settings** → **Secrets and variables** → **Actions**
+   This will automatically:
+   - Start the CPU development container
+   - Enter the Poetry virtual environment
+   - Set up command aliases (e.g., `ui` for running the UI)
+
+4. Configure GitHub Actions secrets for automated Docker builds:
+   - Go to repository **Settings** → **Secrets and variables** → **Actions**
    - Add the following repository secrets:
      - `DOCKERHUB_USERNAME`: Your Docker Hub username
      - `DOCKERHUB_TOKEN`: Your Docker Hub access token
-   - These secrets enable automatic Docker image building and pushing via GitHub Actions
 
 <div align="center">
 
@@ -78,18 +79,19 @@ Before using ProbRT, ensure you have the following installed on your Linux syste
 </div>
 
 ```
-ProbRT/
-├── run.sh                      # Main execution script for Docker services
+2025-fall-AI-course/
+├── run.sh                      # Main execution script for Docker container
 ├── docker/                     # Docker configuration files
 │   ├── dockerfile.cpu              # CPU-only multi-stage Dockerfile
-│   ├── dockerfile.gpu              # GPU-enabled multi-stage Dockerfile
-│   ├── compose.cpu.yml             # CPU Docker Compose configuration
-│   └── compose.gpu.yml             # GPU Docker Compose configuration
+│   ├── compose.cpu.yml             # Docker Compose configuration
+│   ├── setup.sh                    # Environment setup script
+│   ├── build.sh                    # Automated build script
+│   └── entrypoint.sh               # Container entrypoint with aliases
 ├── .github/                    # GitHub workflows and CI/CD
 │   └── workflows/
-│       ├── docker.cpu.yml          # CPU Docker build and push workflow
-│       └── docker.gpu.yml          # GPU Docker build and push workflow
+│       └── docker.cpu.yml          # CPU Docker build and push workflow
 ├── workspace/                  # Development workspace (mounted as volume)
+│   └── openpilot/                  # Openpilot source code with submodules
 └── README.md                   # Project documentation
 ```
 
@@ -97,23 +99,23 @@ ProbRT/
 
 </br>
 
-## Docker Services
+## Development Environment
 
 </div>
 
-### CPU Services
-- **dev**: Development environment with interactive shell access
-- **deploy**: Deployment service for production applications
+### Container Features
+- **Base**: Ubuntu 20.04 with Python 3.8
+- **Package Manager**: Poetry 1.3.2 for dependency management
+- **Build System**: SCons with automated compilation
+- **GUI Support**: X11 forwarding for graphical applications
+- **Persistence**: Workspace mounted as Docker volume
 
-### GPU Services  
-- **dev**: GPU-enabled development environment with NVIDIA runtime
-- **deploy**: GPU-accelerated deployment service
-
-All services include:
-- Health checks for application monitoring
-- Volume mounts for development workspace
-- X11 forwarding for GUI applications
-- Multi-stage builds for optimized container size
+### Key Components
+- Multi-stage Docker build with automated openpilot compilation
+- Poetry virtual environment with 191+ packages
+- Custom command aliases for quick access to tools
+- Git LFS support for binary dependencies
+- Health checks and automatic container management
 
 <div align="center">
 
@@ -133,20 +135,20 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 </div>
 
-<a href="https://github.com/pomelo925/ProbRT/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=pomelo925/ProbRT" />
+<a href="https://github.com/pomelo925/2025-fall-AI-course/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=pomelo925/2025-fall-AI-course" />
 </a>
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/pomelo925/ProbRT.svg?style=for-the-badge
-[contributors-url]: https://github.com/pomelo925/ProbRT/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/pomelo925/ProbRT.svg?style=for-the-badge
-[forks-url]: https://github.com/pomelo925/ProbRT/network/members
-[stars-shield]: https://img.shields.io/github/stars/pomelo925/ProbRT.svg?style=for-the-badge
-[stars-url]: https://github.com/pomelo925/ProbRT/stargazers
-[issues-shield]: https://img.shields.io/github/issues/pomelo925/ProbRT.svg?style=for-the-badge
-[issues-url]: https://github.com/pomelo925/ProbRT/issues
-[license-shield]: https://img.shields.io/github/license/pomelo925/ProbRT.svg?style=for-the-badge
-[license-url]: https://github.com/pomelo925/ProbRT/blob/main/LICENSE
+[contributors-shield]: https://img.shields.io/github/contributors/pomelo925/2025-fall-AI-course.svg?style=for-the-badge
+[contributors-url]: https://github.com/pomelo925/2025-fall-AI-course/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/pomelo925/2025-fall-AI-course.svg?style=for-the-badge
+[forks-url]: https://github.com/pomelo925/2025-fall-AI-course/network/members
+[stars-shield]: https://img.shields.io/github/stars/pomelo925/2025-fall-AI-course.svg?style=for-the-badge
+[stars-url]: https://github.com/pomelo925/2025-fall-AI-course/stargazers
+[issues-shield]: https://img.shields.io/github/issues/pomelo925/2025-fall-AI-course.svg?style=for-the-badge
+[issues-url]: https://github.com/pomelo925/2025-fall-AI-course/issues
+[license-shield]: https://img.shields.io/github/license/pomelo925/2025-fall-AI-course.svg?style=for-the-badge
+[license-url]: https://github.com/pomelo925/2025-fall-AI-course/blob/main/LICENSE
