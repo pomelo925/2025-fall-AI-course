@@ -2,7 +2,7 @@ name: Stretch3 CPU Docker Image
 
 on:
   push: 
-      branches: [ main, dev-pomelo925 ]
+      branches: [ main ]
       paths:
       - docker/dockerfile.cpu
       - docker/compose.cpu.yml
@@ -20,7 +20,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-            images: ${{ secrets.DOCKERHUB_USERNAME }}/foo
+            images: ${{ secrets.DOCKERHUB_USERNAME }}/2025-fall-ai-course
             tags: gpu
 
       # Login Docker Hub

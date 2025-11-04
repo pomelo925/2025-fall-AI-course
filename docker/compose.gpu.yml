@@ -5,10 +5,10 @@ x-common-settings: &common
   build:
     context: ..
     dockerfile: docker/dockerfile.gpu
-  image: pomelo925/foo:gpu
+  image: pomelo925/2025-fall-ai-course:gpu
 
   volumes:
-    # GUI support for ROS applications
+    # GUI support for applications
     - $HOME/.Xauthority:/root/.Xauthority
     - /tmp/.X11-unix:/tmp/.X11-unix
     
@@ -20,7 +20,7 @@ x-common-settings: &common
     - XAUTHORITY=/tmp/.docker.xauth
 
   # Container communication settings
-  network_mode: "host"
+  network_mode: host
   ipc: host
   
   # Container settings
@@ -29,13 +29,6 @@ x-common-settings: &common
   privileged: true
   stop_grace_period: 1s
   working_dir: /workspace
-
-x-healthcheck-settings: &healthcheck
-  healthcheck:
-    test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-    interval: 30s
-    timeout: 10s
-    retries: 3
 
 ############################
 ###   GPU settings       ###
@@ -59,15 +52,11 @@ x-gpu-settings: &gpu
 ##############################
 services:
   dev:
-    <<: [*common, *gpu, *healthcheck]
-    container_name: probrt-gpu-dev
-    ports:
-      - "8000:8000"
+    <<: [*common, *gpu]
+    container_name: gpu-dev
     command: ["/bin/bash"]
 
   deploy:
-    <<: [*common, *gpu, *healthcheck]
-    container_name: probrt-gpu-deploy
-    ports:
-      - "8001:8000"
+    <<: [*common, *gpu]
+    container_name: gpu-deploy
     command: ["/bin/bash"]

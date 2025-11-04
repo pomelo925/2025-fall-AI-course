@@ -2,23 +2,20 @@
 
 # Usage function
 usage() {
-  echo "usage: $0 <device> <service>"
-  echo "device:"
-  echo "  cpu             Use CPU-only environment"
-  echo "  gpu             Use GPU-accelerated environment"
+  echo "usage: $0 <service>"
   echo "service:"
   echo "  dev             Development service (interactive shell)"
   echo "  deploy          Deploy service (application runtime)"
   echo ""
   echo "Examples:"
-  echo "  $0 cpu dev      # Start CPU development environment"
-  echo "  $0 gpu deploy   # Start GPU deployment service"
+  echo "  $0 dev          # Start development environment"
+  echo "  $0 deploy       # Start deployment service"
   exit 1
 }
 
-# Check if exactly two arguments are provided
-if [ $# -ne 2 ]; then
-    echo "Error: Both device and service arguments are required."
+# Check if exactly one argument is provided
+if [ $# -ne 1 ]; then
+    echo "Error: Service argument is required."
     usage
 fi
 
@@ -26,24 +23,11 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Parse arguments
-DEVICE=$1
-SERVICE=$2
+SERVICE=$1
 
-# Validate device
-case "$DEVICE" in
-    cpu)
-        COMPOSE_FILE="$SCRIPT_DIR/docker/compose.cpu.yml"
-        PROJECT_NAME="probrt-cpu"
-        ;;
-    gpu)
-        COMPOSE_FILE="$SCRIPT_DIR/docker/compose.gpu.yml"
-        PROJECT_NAME="probrt-gpu"
-        ;;
-    *)
-        echo "Error: Invalid device '$DEVICE'. Must be 'cpu' or 'gpu'."
-        usage
-        ;;
-esac
+# Use GPU directly
+COMPOSE_FILE="$SCRIPT_DIR/docker/compose.gpu.yml"
+PROJECT_NAME="2025-fall-ai-course"
 
 # Validate service name
 case "$SERVICE" in
@@ -92,25 +76,5 @@ echo "Cleaning up existing containers..."
 docker compose -p "$PROJECT_NAME" -f "$COMPOSE_FILE" down --volumes --remove-orphans 2>/dev/null || true
 
 # Start the specific service
-echo "Starting $DEVICE $SERVICE service..."
+echo "Starting GPU $SERVICE service..."
 docker compose -p "$PROJECT_NAME" -f "$COMPOSE_FILE" up -d $SERVICE
-
-# Wait a moment for container to be ready
-sleep 2
-
-# Container name based on project and service
-CONTAINER_NAME="${PROJECT_NAME}-${SERVICE}"
-
-if [ "$SERVICE" = "dev" ]; then
-    # Enter the container for dev service
-    echo "Entering container..."
-    docker exec -it "$CONTAINER_NAME" /bin/bash
-elif [ "$SERVICE" = "deploy" ]; then
-    # Show logs for deploy service
-    echo "Deploy service started. Showing logs..."
-    echo "Press Ctrl+C to stop the service."
-    docker compose -p "$PROJECT_NAME" -f "$COMPOSE_FILE" logs -f "$SERVICE"
-fi
-
-echo "Service session ended."
-echo "To stop the service, run: docker compose -p $PROJECT_NAME -f $COMPOSE_FILE down"
