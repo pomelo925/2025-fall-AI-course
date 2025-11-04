@@ -1,4 +1,4 @@
-name: Stretch3 CPU Docker Image
+name: 2025-fall-ai-course docker image
 
 on:
   push: 
@@ -15,6 +15,9 @@ jobs:
       # Initialization
       - name: Repo Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          lfs: true
 
       - name: Docker meta
         id: meta

@@ -102,10 +102,5 @@ FROM build AS release
 
 WORKDIR /workspace/openpilot
 
-# Copy entrypoint script
-COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["shell"]
+CMD ["tail", "-f", "/dev/null"]
 

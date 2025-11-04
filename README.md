@@ -85,8 +85,7 @@ Before using this project, ensure you have the following installed on your Linux
 │   ├── dockerfile.cpu              # CPU-only multi-stage Dockerfile
 │   ├── compose.cpu.yml             # Docker Compose configuration
 │   ├── setup.sh                    # Environment setup script
-│   ├── build.sh                    # Automated build script
-│   └── entrypoint.sh               # Container entrypoint with aliases
+│   └── build.sh                    # Automated build script
 ├── .github/                    # GitHub workflows and CI/CD
 │   └── workflows/
 │       └── docker.cpu.yml          # CPU Docker build and push workflow
